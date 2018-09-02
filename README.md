@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # README
 
 This README would normally document whatever steps are necessary to get the
@@ -23,7 +22,3 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
-=======
-# my_web
-personal study and test
->>>>>>> 99711d81787c195ebc64abf3d5812b5ce37ca482
