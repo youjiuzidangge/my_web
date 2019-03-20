@@ -2,6 +2,7 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'    # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
+require 'mina/puma'
 
 # Basic settings:
 #   domain       - The hostname to SSH to.
@@ -166,11 +167,30 @@ task :deploy do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
       end
+      #invoke :'puma:custom_start'
     end
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
   # run(:local){ say 'done' }
+end
+
+namespace :puma do
+  task :custom_start => :environment do
+    command %[
+      if [ -e '#{fetch(:pumactl_socket)}' ]; then
+        echo 'Puma is already running!';
+      else
+        if [ -e '#{fetch(:puma_config)}' ]; then
+          cd '#{fetch(:current_path)}' && #{fetch(:puma_cmd)} -d -e #{fetch(:puma_env)} -C #{fetch(:puma_config)}
+          sleep 1
+        else
+          echo 'Puma config is required'
+          exit 1
+        fi
+      fi
+    ]
+  end
 end
 
 # For help in making your deploy script, see the Mina documentation:
