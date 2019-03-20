@@ -5,6 +5,7 @@ ruby '2.5.1'
 
 
 # gem custome added
+gem 'dotenv-rails'
 gem 'mina'
 
 
@@ -13,7 +14,6 @@ gem 'rails', '~> 5.2.0'
 gem 'mysql2'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
-gem 'dotenv'
 # Use SCSS for stylesheets
 # gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

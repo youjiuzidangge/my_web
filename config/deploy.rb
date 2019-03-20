@@ -24,8 +24,33 @@ set :user, 'deploy'
 # Shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 # Some plugins already add folders to shared_dirs like `mina/rails` add `public/assets`, `vendor/bundle` and many more
 # run `mina -d` to see all folders and files already included in `shared_dirs` and `shared_files`
+# Fill in the names of the files and directories that will be symlinks to the shared directory. 
+# All folders will be created automatically on Mina setup.
+# Don’t forget to add a path to the uploads folder if you are using Dragonfly or CarrierWave.
+# Otherwise, you will lose your uploads on each deploy.
 # set :shared_dirs, fetch(:shared_dirs, []).push('public/assets')
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
+
+set :shared_dirs, [ 'config/wx_cert',
+                    'config/ali_cert',
+                    'log',
+                    'logs',
+                    'tmp',
+                    'vendor/bundle',
+                    'node_modules',
+                    # 'public',
+                    'public/assets',
+                    'public/packs',
+                    'public/uploads',
+                    'public/front'
+                    ]
+
+
+set :shared_files, ['config/database.yml',
+                    'config/puma.rb',
+                    'config/secrets.yml',
+                    '.env'
+                    ]
 
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -42,6 +67,84 @@ end
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
   # command %{rbenv install 2.3.0 --skip-existing}
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/log"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/log"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/logs"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/logs"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config/wx_cert"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/wx_cert"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config/ali_cert"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/ali_cert"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/vendor/bundle"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/vendor/bundle"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/node_modules"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/node_modules"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/assets"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/assets"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/packs"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/packs"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/uploads"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/uploads"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/front"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front"]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/front_new"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front_new"]
+
+  command %[touch "#{fetch(:deploy_to)}/shared/config/database.yml"]
+  command  %[echo "-----> Be sure to edit 'shared/config/database.yml'."]
+
+  # command %[touch "#{fetch(:deploy_to)}/shared/config/mongoid.yml"]
+  # command  %[echo "-----> Be sure to edit 'shared/config/mongoid.yml'."]
+
+  command %[touch "#{fetch(:deploy_to)}/shared/config/puma.rb"]
+  command  %[echo "-----> Be sure to edit 'shared/config/puma.rb'."]
+
+  command %[touch "#{fetch(:deploy_to)}/shared/config/wx_cert/apiclient_cert.p12"]
+  command  %[echo "-----> Be sure to edit 'shared/config/wx_cert/apiclient_cert.p12'."]
+
+  command %[touch "#{fetch(:deploy_to)}/shared/config/ali_cert/rsa_private_key.pem"]
+  command  %[echo "-----> Be sure to edit 'shared/config/ali_cert/rsa_private_key.pem'."]
+
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp/sockets"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/sockets"]
+
+  # tmp/sockets/puma.state
+  command %[touch "#{fetch(:deploy_to)}/shared/tmp/sockets/puma.state"]
+  command  %[echo "-----> Be sure to edit 'shared/tmp/sockets/puma.state'."]
+
+  # log/puma.stdout.log
+  command %[touch "#{fetch(:deploy_to)}/shared/log/puma.stdout.log"]
+  command  %[echo "-----> Be sure to edit 'shared/log/puma.stdout.log'."]
+
+  # log/puma.stdout.log
+  command %[touch "#{fetch(:deploy_to)}/shared/log/puma.stderr.log"]
+  command  %[echo "-----> Be sure to edit 'shared/log/puma.stderr.log'."]
+
+  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp/pids"]
+  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/pids"]
 end
 
 desc "Deploys the current version to the server."
