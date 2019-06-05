@@ -167,7 +167,7 @@ task :deploy do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
       end
-      #invoke :'puma:custom_start'
+      invoke :'puma:restart'
     end
   end
 
