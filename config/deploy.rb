@@ -200,7 +200,7 @@ namespace :whenever do
   task update: :environment do
     command 'echo "-----> Update crontab"'
     command 'crontab -r'
-    command "cd #{deploy_to}/current && bundle exec whenever --update-crontab"
+    command "cd #{fetch(:deploy_to)}/current && bundle exec whenever --update-crontab"
   end
 end
 # For help in making your deploy script, see the Mina documentation:
