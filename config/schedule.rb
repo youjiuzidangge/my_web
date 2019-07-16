@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 10.minutes do
+every 1.day, at: ['7:30 am'] do
   runner "DailyPushers::ShanbeiPusher.call"
 end

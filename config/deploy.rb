@@ -199,6 +199,7 @@ namespace :whenever do
   desc 'Update crontab'
   task update: :environment do
     command 'echo "-----> Update crontab"'
+    command "echo '-----> #{fetch(:deploy_to)}'"
     command 'crontab -r'
     command "cd #{fetch(:deploy_to)}/current && bundle exec whenever --update-crontab"
   end

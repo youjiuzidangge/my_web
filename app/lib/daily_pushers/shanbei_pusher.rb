@@ -17,8 +17,7 @@ module DailyPushers
 
     private
       def content
-        #current_date = Time.zone.today.strftime('%Y-%m-%d')
-        current_date="2019-06-30"
+        current_date = Time.zone.today.strftime('%Y-%m-%d')
         url = "#{BASE_URI}/#{current_date}/"
         conn = Faraday.new
         resp = conn.get do |req|
