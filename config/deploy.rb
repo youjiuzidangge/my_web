@@ -169,6 +169,7 @@ task :deploy do
       end
       invoke :'puma:custom_start'
       #invoke :'puma:restart'
+      invoke :'whenever:update'
     end
   end
 
@@ -194,6 +195,14 @@ namespace :puma do
   end
 end
 
+namespace :whenever do
+  desc 'Update crontab'
+  task update: :environment do
+    queue 'echo "-----> Update crontab"'
+    queue 'crontab -r'
+    queue "cd #{deploy_to}/current && bundle exec whenever --update-crontab"
+  end
+end
 # For help in making your deploy script, see the Mina documentation:
 #
 #  - https://github.com/mina-deploy/mina/tree/master/docs
