@@ -14,18 +14,33 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
-    config.action_controller.perform_caching = true
+  # if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  #   config.action_controller.perform_caching = true
 
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+  #   config.cache_store = :memory_store
+  #   config.public_file_server.headers = {
+  #     'Cache-Control' => "public, max-age=#{2.days.to_i}"
+  #   }
+  # else
+  #   config.action_controller.perform_caching = false
+
+  #   config.cache_store = :null_store
+  # end
+  config.cache_store = :redis_cache_store, {
+    driver: :hiredis,
+    url: ENV['REDIS_URL_CACHE'],
+
+    connect_timeout:    30,  # Defaults to 20 seconds
+    read_timeout:       0.2, # Defaults to 1 second
+    write_timeout:      0.2, # Defaults to 1 second
+    reconnect_attempts: 1,   # Defaults to 0
+
+    error_handler: -> (method:, returning:, exception:) {
+      # Report errors to Sentry as warnings
+      Raven.capture_exception exception, level: 'warning',
+        tags: { method: method, returning: returning }
     }
-  else
-    config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
-  end
+  }
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
