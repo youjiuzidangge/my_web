@@ -9,6 +9,7 @@ gem 'dotenv-rails'
 gem 'mina'
 gem 'mina-puma'
 gem 'whenever', require: false
+gem 'faraday'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
