@@ -1,3 +1,6 @@
+# custom ignore
+.idea/
+
 *.rbc
 capybara-*.html
 .rspec
