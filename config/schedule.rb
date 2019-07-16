@@ -18,3 +18,7 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+
+every 10.minutes do
+  runner "DailyPushers::ShanbeiPusher.call"
+end
