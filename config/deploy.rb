@@ -198,9 +198,9 @@ end
 namespace :whenever do
   desc 'Update crontab'
   task update: :environment do
-    queue 'echo "-----> Update crontab"'
-    queue 'crontab -r'
-    queue "cd #{deploy_to}/current && bundle exec whenever --update-crontab"
+    command 'echo "-----> Update crontab"'
+    command 'crontab -r'
+    command "cd #{deploy_to}/current && bundle exec whenever --update-crontab"
   end
 end
 # For help in making your deploy script, see the Mina documentation:
