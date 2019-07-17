@@ -2,17 +2,10 @@
 
 module DailyPushers
   class ShanbeiPusher < Base
-    BASE_URI        = 'https://api.tecchen.xyz/api/quote/'
-    SERVER_CUTE_URI = 'https://sc.ftqq.com/SCU55413T7122f3389e198bfd04e58c3d742e6eb85d2d69863e45b.send'
+    BASE_URI = 'https://api.tecchen.xyz/api/quote/'
 
     def call
-      conn = Faraday.new
-      conn.post do |req|
-        req.url SERVER_CUTE_URI
-        req.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
-        req.params['text'] = '每日鸡汤'
-        req.params['desp'] = generate_markdown
-      end
+      push_to_wechat('每日鸡汤', generate_markdown)
     end
 
     private
