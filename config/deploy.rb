@@ -167,8 +167,9 @@ task :deploy do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
       end
+      invoke :'puma:stop'
       invoke :'puma:custom_start'
-      #invoke :'puma:restart'
+      
       invoke :'whenever:update'
     end
   end
@@ -178,7 +179,7 @@ task :deploy do
 end
 
 namespace :puma do
-  task :custom_start => :environment do
+  task :custom_start do
     command %[
       if [ -e '#{fetch(:pumactl_socket)}' ]; then
         echo 'Puma is already running!';
@@ -197,7 +198,7 @@ end
 
 namespace :whenever do
   desc 'Update crontab'
-  task update: :environment do
+  task :update do
     command 'echo "-----> Update crontab"'
     command "echo '-----> #{fetch(:deploy_to)}'"
     command 'crontab -r'
