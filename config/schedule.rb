@@ -22,7 +22,3 @@
 every 1.day, at: ['7:30 am'] do
   runner "DailyPushers::ShanbeiPusher.call"
 end
-
-every 5.minutes do
-  runner "DailyPushers::ShanbeiPusher.for_test"
-end

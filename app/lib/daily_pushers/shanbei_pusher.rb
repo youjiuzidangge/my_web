@@ -15,19 +15,6 @@ module DailyPushers
       end
     end
 
-    def self.for_test
-      current_time = Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')
-      current_date = Time.zone.today.strftime('%Y-%m-%d')
-
-      conn = Faraday.new
-      conn.post do |req|
-        req.url SERVER_CUTE_URI
-        req.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
-        req.params['text'] = current_time
-        req.params['desp'] = current_date
-      end
-    end
-
     private
       def content
         current_date = Time.zone.today.strftime('%Y-%m-%d')
