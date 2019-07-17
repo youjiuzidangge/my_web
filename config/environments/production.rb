@@ -60,6 +60,7 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     driver: :hiredis,
     url: ENV['REDIS_URL_CACHE'],
+    password: ENV['REDIS_PASSWORD'],
 
     connect_timeout:    30,  # Defaults to 20 seconds
     read_timeout:       0.2, # Defaults to 1 second
