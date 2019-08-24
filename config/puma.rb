@@ -15,6 +15,8 @@ port        ENV.fetch("PORT") { 3000 }
 #
 environment ENV.fetch("RAILS_ENV") { "development" }
 
+file = 'puma'
+
 puts "RAILS_LOG_TO_STDOUT => #{ENV['RAILS_LOG_TO_STDOUT']}"
 if ENV['RAILS_LOG_TO_STDOUT'] == 'true'
   stdout_redirect "log/production.log", "log/#{file}_err.log", true
