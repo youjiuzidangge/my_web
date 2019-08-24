@@ -17,6 +17,7 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 file = 'puma'
 
+puts "*" * 1000
 puts "RAILS_LOG_TO_STDOUT => #{ENV['RAILS_LOG_TO_STDOUT']}"
 if ENV['RAILS_LOG_TO_STDOUT'] == 'true'
   stdout_redirect "log/production.log", "log/#{file}_err.log", true
