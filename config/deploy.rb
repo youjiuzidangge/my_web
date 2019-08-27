@@ -184,6 +184,8 @@ namespace :puma do
       if [ -e '#{fetch(:pumactl_socket)}' ]; then
         echo 'Puma is already running!';
       else
+        echo 'this -----------------------------------'
+        echo '#{fetch(:puma_config)}'
         if [ -e '#{fetch(:puma_config)}' ]; then
           cd '#{fetch(:current_path)}' && #{fetch(:puma_cmd)} -d -e #{fetch(:puma_env)} -C #{fetch(:puma_config)}
           sleep 1
