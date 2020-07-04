@@ -9,7 +9,8 @@ gem 'mina'
 gem 'mina-puma'
 gem 'whenever', require: false
 gem 'faraday'
-gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
+
+gem 'faker', :git => 'https://github.com.cnpmjs.org/faker-ruby/faker.git', :branch => 'master'
 gem 'sidekiq'
 gem 'kaminari'
 
