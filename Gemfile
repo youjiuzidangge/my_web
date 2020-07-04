@@ -1,5 +1,4 @@
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+source 'https://gems.ruby-china.com'
 
 ruby '2.5.1'
 
@@ -10,6 +9,9 @@ gem 'mina'
 gem 'mina-puma'
 gem 'whenever', require: false
 gem 'faraday'
+gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
+gem 'sidekiq'
+gem 'kaminari'
 
 gem 'therubyracer', platforms: :ruby
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

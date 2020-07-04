@@ -1,0 +1,9 @@
+development:
+  :concurrency: 5
+production:
+  :environment: production
+  :verbose: true
+  :concurrency: ENV.fetch("RAILS_MAX_THREADS") { 5 }
+:queues:
+  - health_check
+  - default
