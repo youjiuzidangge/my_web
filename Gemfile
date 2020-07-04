@@ -2,7 +2,6 @@ source 'https://gems.ruby-china.com'
 
 ruby '2.5.1'
 
-
 # gem custome added
 gem 'dotenv-rails'
 gem 'mina'

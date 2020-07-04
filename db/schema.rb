@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_04_085722) do
+ActiveRecord::Schema.define(version: 2020_07_04_143350) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", limit: 16, null: false, comment: "名称"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 2020_07_04_085722) do
     t.boolean "is_recorded", default: false, null: false, comment: "是否入账"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "quantity", null: false, comment: "借阅数"
+    t.integer "total_fee", null: false, comment: "总费用"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", comment: "用户表", force: :cascade do |t|
