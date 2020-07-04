@@ -1,12 +1,30 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[destroy]
+  before_action :set_book, only: %i[edit update destroy]
 
   def index
-    @books = Book.all
+    @books = Book.paginate(page:params[:page],per_page: 20)
   end
 
   def new
     @book = Book.new
+  end
+
+  def show
+    redirect_to books_path, notice: 'edit success.'
+  end
+
+  def edit; end
+
+  def update
+    respond_to do |format|
+      if @book.update(book_params)
+        format.html { redirect_to @book, notice: 'Book was successfully updated.' }
+        format.json { render :show, status: :ok, location: @book }
+      else
+        format.html { render :edit }
+        format.json { render json: @book.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def create

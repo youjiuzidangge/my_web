@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 2020_07_04_143350) do
 
   create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "category", null: false, comment: "交易流水分类"
+    t.integer "quantity", null: false, comment: "借阅数"
+    t.integer "total_fee", null: false, comment: "总费用"
     t.integer "user_id", null: false, comment: "用户id"
     t.string "username", limit: 16, comment: "用户名"
     t.integer "book_id", null: false, comment: "书籍id"
@@ -30,8 +32,6 @@ ActiveRecord::Schema.define(version: 2020_07_04_143350) do
     t.boolean "is_recorded", default: false, null: false, comment: "是否入账"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quantity", null: false, comment: "借阅数"
-    t.integer "total_fee", null: false, comment: "总费用"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", comment: "用户表", force: :cascade do |t|

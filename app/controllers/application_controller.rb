@@ -1,10 +1,12 @@
 class ApplicationController < ActionController::Base
+  skip_before_action :verify_authenticity_token
+
   def render_success_data(message, code = 200, data = {})
-    render_json_data(code, message, code, data)
+    render_json_data(200, message, code, data)
   end
 
   def render_error_msg(message, code = 400)
-    render_json_data(code, message || '请求失败', code)
+    render_json_data(400, message || '请求失败', -1)
   end
 
   private

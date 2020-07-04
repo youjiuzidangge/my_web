@@ -1,0 +1,34 @@
+<h1>Transactions</h1>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>book_title</th>
+    <th>username</th>
+    <th>category</th>
+    <th>quantity</th>
+    <th>total_fee</th>
+    <th>loan_at</th>
+    <th>is_settled</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @transactions.each do |transaction| %>
+    <tr>
+      <td><%= transaction.book_title %></td>
+      <td><%= transaction.username %> </td>
+      <td><%= transaction.lent? ? 'borrowed' : 'returned' %> </td>
+      <td><%= transaction.quantity %> </td>
+      <td><%= transaction.total_fee %> </td>
+      <td><%= transaction.loan_at %> </td>
+      <td><%= transaction.is_recorded %> </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'users', users_path, class: 'btn btn-secondary'  %>
+<%= link_to 'books', books_path, class: 'btn btn-secondary'  %>

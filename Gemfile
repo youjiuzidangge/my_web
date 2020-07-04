@@ -10,7 +10,7 @@ gem 'whenever', require: false
 gem 'faraday'
 
 gem 'sidekiq'
-gem 'kaminari'
+gem 'will_paginate', '~> 3.1.0'
 gem 'simple_form'
 
 gem 'therubyracer', platforms: :ruby
