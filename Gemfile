@@ -10,9 +10,9 @@ gem 'mina-puma'
 gem 'whenever', require: false
 gem 'faraday'
 
-gem 'faker', :git => 'https://github.com.cnpmjs.org/faker-ruby/faker.git', :branch => 'master'
 gem 'sidekiq'
 gem 'kaminari'
+gem 'simple_form'
 
 gem 'therubyracer', platforms: :ruby
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

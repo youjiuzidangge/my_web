@@ -1,0 +1,33 @@
+<% if notice.present? %>
+<div class="alert alert-success" role="alert" id="notice">
+  <%= notice %>
+</div>
+<% end %>
+
+<h1>Users</h1>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>account</th>
+    <th>username</th>
+    <th>balance</th>
+    <th colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.account %></td>
+      <td><%= user.username %> </td>
+      <td><%= user.balance %></td>
+      <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User', new_user_path, class: 'btn btn-primary' %>

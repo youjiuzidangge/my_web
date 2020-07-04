@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com.cnpmjs.org/faker-ruby/faker.git
-  revision: 7309c9d59f1f73e7875635c083f7d8958e0c9f3a
-  branch: master
-  specs:
-    faker (2.13.0)
-      i18n (>= 1.6, < 2)
-
 GEM
   remote: https://gems.ruby-china.com/
   specs:
@@ -193,6 +185,9 @@ GEM
       rack (~> 2.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 4.2)
+    simple_form (5.0.2)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -240,7 +235,6 @@ DEPENDENCIES
   chromedriver-helper
   coffee-rails (~> 4.2)
   dotenv-rails
-  faker!
   faraday
   hiredis
   jbuilder (~> 2.5)
@@ -254,6 +248,7 @@ DEPENDENCIES
   redis (~> 4.0)
   selenium-webdriver
   sidekiq
+  simple_form
   spring
   spring-watcher-listen (~> 2.0.0)
   therubyracer

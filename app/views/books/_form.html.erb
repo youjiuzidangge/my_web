@@ -1,0 +1,12 @@
+<%= simple_form_for(@book) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :title %>
+    <%= f.input :stock %>
+    <%= f.input :fee %>
+  </div>
+
+  <%= f.button :submit, class: "btn btn-primary" %>
+  <%= link_to 'Back', users_path, class: 'btn btn-secondary'  %>
+<% end %>

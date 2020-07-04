@@ -1,0 +1,33 @@
+<% if notice.present? %>
+  <div class="alert alert-success" role="alert" id="notice">
+    <%= notice %>
+  </div>
+<% end %>
+
+<h1>Books</h1>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>title</th>
+    <th>stock</th>
+    <th>fee</th>
+    <th colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @books.each do |book| %>
+    <tr>
+      <td><%= book.title %></td>
+      <td><%= book.stock %> </td>
+      <td><%= book.fee %> </td>
+      <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Book', new_book_path, class: 'btn btn-primary' %>

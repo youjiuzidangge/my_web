@@ -1,0 +1,12 @@
+<%= simple_form_for(@user) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :account %>
+    <%= f.input :username %>
+    <%= f.input :balance %>
+  </div>
+
+  <%= f.button :submit, class: "btn btn-primary" %>
+  <%= link_to 'Back', users_path, class: 'btn btn-secondary'  %>
+<% end %>
