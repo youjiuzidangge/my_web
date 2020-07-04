@@ -59,7 +59,7 @@ Rails.application.configure do
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, {
     driver: :hiredis,
-    url: ENV['REDIS_URL_CACHE'],
+    cluster: ENV['REDIS_CLUSTER_NODES'].split(','),
     password: ENV['REDIS_PASSWORD'],
 
     connect_timeout:    30,  # Defaults to 20 seconds

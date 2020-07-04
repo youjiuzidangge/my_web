@@ -1,0 +1,1 @@
+Redis.current = Rails.cache.redis if Rails.env != 'test'
