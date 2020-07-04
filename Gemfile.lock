@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/faker-ruby/faker.git
+  remote: https://github.com.cnpmjs.org/faker-ruby/faker.git
   revision: 7309c9d59f1f73e7875635c083f7d8958e0c9f3a
   branch: master
   specs:
