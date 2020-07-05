@@ -6,7 +6,7 @@ ruby '2.5.1'
 gem 'dotenv-rails'
 gem 'mina'
 gem 'mina-puma'
-gem 'mina-whenever'
+gem 'mina-whenever', require: false
 gem 'whenever', require: false
 gem 'faraday'
 
