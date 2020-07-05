@@ -11,6 +11,8 @@
   <tr>
     <th>title</th>
     <th>stock</th>
+    <th>total_stock</th>
+    <th>lent_quantity</th>
     <th>fee</th>
     <th colspan="3"></th>
   </tr>
@@ -21,7 +23,10 @@
     <tr>
       <td><%= book.title %></td>
       <td><%= book.stock %> </td>
+      <td><%= book.total_stock %> </td>
+      <td><%= book.total_stock - book.stock %> </td>
       <td><%= book.fee %> </td>
+      <td><%= link_to 'Detail', detail_book_path(book) %></td>
       <td><%= link_to 'Edit', edit_book_path(book) %></td>
       <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>

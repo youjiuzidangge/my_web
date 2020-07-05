@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[restore borrow edit update destroy]
+  before_action :set_user, only: %i[detail restore borrow edit update destroy]
 
   def index
     @users = User.order(id: :desc).paginate(page:params[:page], per_page: 20)
@@ -8,6 +8,8 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
+
+  def detail; end
 
   def show
     redirect_to users_path, notice: 'edit success.'

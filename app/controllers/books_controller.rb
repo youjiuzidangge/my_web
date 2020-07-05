@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[edit update destroy]
+  before_action :set_book, only: %i[income detail edit update destroy]
 
   def index
     @books = Book.paginate(page:params[:page],per_page: 20)
@@ -7,6 +7,22 @@ class BooksController < ApplicationController
 
   def new
     @book = Book.new
+  end
+
+  def detail; end
+
+  def income
+    start_at = params[:start_at]
+    end_at = params[:end_at] || Time.zone.now
+
+    trans = Transaction.lent.recorded.where(book_id: @book.id)
+    if start_at.present?
+      income = trans.where('loan_at BETWEEN ? AND ?', start_at, end_at).sum(:total_fee)
+    else
+      income = @book.income
+    end
+
+    render_success_data('success', SUCCESS_CODE, {income: income})
   end
 
   def show
@@ -55,6 +71,6 @@ class BooksController < ApplicationController
   end
 
   def book_params
-    params.require(:book).permit(:title, :stock, :fee)
+    params.require(:book).permit(:title, :stock, :fee, :total_stock)
   end
 end

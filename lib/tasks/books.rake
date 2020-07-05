@@ -3,7 +3,7 @@
 namespace :books do
   desc "to calculate the total income of restored books every 10 minutes"
   task calculate_incomes: :environment do
-    Transaction.restored.unrecorded.find_each do |tran|
+    Transaction.lent.unrecorded.find_each do |tran|
       ActiveRecord::Base.transaction do
         book = tran.book
         book.update(income: tran.total_fee + book.income)

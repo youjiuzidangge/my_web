@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_05_021853) do
+ActiveRecord::Schema.define(version: 2020_07_05_180010) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", limit: 16, null: false, comment: "名称"
     t.integer "stock", null: false, comment: "库存"
+    t.integer "total_stock", null: false, comment: "总库存"
     t.integer "fee", null: false, comment: "出借费用"
     t.integer "income", default: 0, comment: "收入（只包含已收录的部分）"
     t.datetime "created_at", null: false
