@@ -92,10 +92,7 @@ class UsersController < ApplicationController
       return render_success_data('the stock is not enough', STOCK_NOT_ENOUGH_ERR_CODE)
     end
 
-    #unless Redis.current.exists("#{book_id}:purchaseFlag")
     Redis.current.set("#{book_id}:purchaseFlag", 0, nx: true, ex: 10.minutes)
-    #end
-
     purchase_flag = Redis.current.get("#{book_id}:purchaseFlag").to_i
     if quantity + purchase_flag > book_stock
       return render_success_data('the stock is not enough', STOCK_NOT_ENOUGH_ERR_CODE)
