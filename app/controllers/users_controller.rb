@@ -107,16 +107,14 @@ class UsersController < ApplicationController
       return render_success_data("user's balance is not enough", BALANCE_NOT_ENOUGH_ERR_CODE)
     end
 
-    time = Time.zone.now
+    time = Time.zone.now.to_s
 
     job = CreateTransactionJob.set(wait: 1).perform_later(
       user_id: @user.id, book_id: book_id,
-      quantity: quantity, time: time.to_s
+      quantity: quantity, time: time
     )
 
-    Redis.current.lpush("job_ids", job.provider_job_id)
-
-    render_success_data('success', SUCCESS_CODE, data: {job_id: job.provider_job_id})
+    render_success_data('success', SUCCESS_CODE, data: {job_id: job.provider_job_id, borrow_time: time})
   end
 
   def destroy
