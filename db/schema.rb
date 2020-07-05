@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_04_143350) do
+ActiveRecord::Schema.define(version: 2020_07_05_021853) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", limit: 16, null: false, comment: "名称"
     t.integer "stock", null: false, comment: "库存"
     t.integer "fee", null: false, comment: "出借费用"
+    t.integer "income", default: 0, comment: "收入（只包含已收录的部分）"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -45,6 +46,7 @@ ActiveRecord::Schema.define(version: 2020_07_04_143350) do
   create_table "users_books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "user_id", null: false, comment: "用户id"
     t.integer "book_id", null: false, comment: "书籍id"
+    t.integer "quantity", null: false, comment: "借阅数"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -20,6 +20,7 @@ development:
   host: <%= ENV["DEVELOPMENT_DB_HOST"] %>
   username: <%= ENV["DEVELOPMENT_DB_USER"] %>
   password: <%= ENV["DEVELOPMENT_DB_PASSWORD"] %>
+  socket: /tmp/mysql.sock
 
 test:
   <<: *default

@@ -10,6 +10,7 @@ gem 'whenever', require: false
 gem 'faraday'
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 gem 'will_paginate', '~> 3.1.0'
 gem 'simple_form'
 

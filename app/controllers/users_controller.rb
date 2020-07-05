@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[borrow edit update destroy]
+  before_action :set_user, only: %i[restore borrow edit update destroy]
 
   def index
-    @users = User.order(id: :desc).paginate(page:params[:page],per_page: 20)
+    @users = User.order(id: :desc).paginate(page:params[:page], per_page: 20)
   end
 
   def new
@@ -40,23 +40,24 @@ class UsersController < ApplicationController
     end
   end
 
-  def borrow
+  def restore
     book_id = params[:book_id]
     quantity = params[:quantity].to_i
-
     book = Book.find(book_id)
 
-    if quantity > book.stock
-      return render_success_data('the stock is not enough', 20001)
-    end
-
-    if @user.balance < quantity * book.fee
-      return render_success_data("user's balance is not enough", 20002)
+    users_book = UsersBook.where(user_id: @user.id, book_id: book.id).take
+    if users_book.blank? || quantity > users_book.quantity
+      return render_success_data('restore too many books', STORE_TOO_MANY_BOOKS_ERR_CODE)
     end
 
     ActiveRecord::Base.transaction do
-      UsersBook.create(user_id: @user.id, book_id: book.id)
-      Transaction.lent.create(
+      if quantity == users_book.quantity
+        users_book.destroy
+      else
+        users_book.update(quantity: users_book.quantity - quantity)
+      end
+
+      Transaction.restored.create(
         quantity: quantity,
         total_fee: book.fee * quantity,
         user_id: @user.id,
@@ -65,11 +66,58 @@ class UsersController < ApplicationController
         book_title: book.title,
         loan_at: Time.zone.now
       )
-      @user.update(balance: @user.balance - quantity * book.fee)
-      book.update(stock: book.stock - quantity)
+      book.update(stock: book.stock + quantity)
+    end
+    render_success_data('success', SUCCESS_CODE)
+  end
+
+  def borrow
+    book_id = params[:book_id]
+    quantity = params[:quantity].to_i
+
+    if quantity <= 0
+      return render_success_data('wrong parameter', WRONG_PARAMETER_ERR_CODE)
     end
 
-    render_success_data('success', 200)
+    unless Redis.current.exists("#{book_id}:bookStore")
+      book = Book.find(book_id)
+      Redis.current.set("#{book_id}:bookStore", book.stock, nx: true, ex: 10.minutes)
+      Redis.current.set("#{book_id}:bookFee", book.fee, nx: true, ex: 10.minutes)
+    end
+
+    book_stock = Redis.current.get("#{book_id}:bookStore").to_i
+    book_fee = Redis.current.get("#{book_id}:bookFee").to_i
+
+    if quantity > book_stock
+      return render_success_data('the stock is not enough', STOCK_NOT_ENOUGH_ERR_CODE)
+    end
+
+    #unless Redis.current.exists("#{book_id}:purchaseFlag")
+    Redis.current.set("#{book_id}:purchaseFlag", 0, nx: true, ex: 10.minutes)
+    #end
+
+    purchase_flag = Redis.current.get("#{book_id}:purchaseFlag").to_i
+    if quantity + purchase_flag > book_stock
+      return render_success_data('the stock is not enough', STOCK_NOT_ENOUGH_ERR_CODE)
+    end
+
+    Redis.current.incrby("#{book_id}:purchaseFlag", quantity)
+    Rails.logger.info("this is flag: #{Redis.current.get("#{book_id}:purchaseFlag")}")
+
+    if @user.balance < quantity * book_fee
+      return render_success_data("user's balance is not enough", BALANCE_NOT_ENOUGH_ERR_CODE)
+    end
+
+    time = Time.zone.now
+
+    job = CreateTransactionJob.set(wait: 1).perform_later(
+      user_id: @user.id, book_id: book_id,
+      quantity: quantity, time: time.to_s
+    )
+
+    Redis.current.lpush("job_ids", job.provider_job_id)
+
+    render_success_data('success', SUCCESS_CODE, data: {job_id: job.provider_job_id})
   end
 
   def destroy
