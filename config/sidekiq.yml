@@ -4,6 +4,7 @@ production:
   :environment: production
   :verbose: true
   :concurrency: 15
+  :pidfile: ./tmp/pids/sidekiq.pid
 :queues:
   - health_check
   - default
