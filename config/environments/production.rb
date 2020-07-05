@@ -60,6 +60,7 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     driver: :hiredis,
     cluster: ENV['REDIS_CLUSTER_NODES'].split(','),
+    replica: true,
     db: 0,
     password: ENV['REDIS_PASSWORD'],
 

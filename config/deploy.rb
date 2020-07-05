@@ -4,7 +4,7 @@ require 'mina/rbenv'    # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 require 'mina/puma'
 require 'mina/whenever'
-require "mina_sidekiq/tasks"
+#require "mina_sidekiq/tasks"
 
 # Basic settings:
 #   domain       - The hostname to SSH to.
@@ -18,6 +18,9 @@ set :deploy_to, '/var/www/my_web'
 set :repository, 'https://github.com/youjiuzidangge/my_web.git'
 set :branch, 'master'
 set :user, 'deploy'
+
+#set :app_path, lambda { "#{fetch(:deploy_to)}/#{fetch(:current_path)}" }
+set :sidekiq_pid, lambda { "#{fetch(:current_path)}/tmp/pids/sidekiq.pid" }
 
 # Optional settings:
 #   set :user, 'foobar'          # Username in the server to SSH to.
@@ -156,7 +159,7 @@ task :deploy do
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
-    invoke :'sidekiq:quiet'
+    #invoke :'sidekiq:quiet'
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
@@ -212,3 +215,22 @@ end
 # For help in making your deploy script, see the Mina documentation:
 #
 #  - https://github.com/mina-deploy/mina/tree/master/docs
+
+namespace :sidekiq do
+  task :start do
+    command 'echo "-----> Start sidekiq"'
+    command "cd #{fetch(:current_path)} && RAILS_ENV=production bundle exec sidekiq -d -L log/sidekiq.log -C config/sidekiq.yml -P #{fetch(:sidekiq_pid)} -e production"
+  end
+
+  task :stop do
+    command 'echo "-----> Stop sidekiq"'
+    command "$(ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9)"
+    command "rm -f #{fetch(:sidekiq_pid)}"
+  end
+
+  task :restart do
+    command 'echo "-----> Restart sidekiq"'
+    invoke :'sidekiq:stop'
+    invoke :'sidekiq:start'
+  end
+end
