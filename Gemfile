@@ -7,6 +7,7 @@ gem 'dotenv-rails'
 gem 'mina'
 gem 'mina-puma'
 gem 'mina-whenever', require: false
+gem 'mina-sidekiq', require: false
 gem 'whenever', require: false
 gem 'faraday'
 
