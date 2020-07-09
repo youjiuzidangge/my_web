@@ -201,25 +201,3 @@ namespace :whenever do
     command "cd #{fetch(:deploy_to)}/current && bundle exec whenever --update-crontab"
   end
 end
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - https://github.com/mina-deploy/mina/tree/master/docs
-
-# namespace :sidekiq do
-#   task :start do
-#     command 'echo "-----> Start sidekiq"'
-#     command "cd #{fetch(:current_path)} && RAILS_ENV=production bundle exec sidekiq -d -L log/sidekiq.log -C config/sidekiq.yml -P #{fetch(:sidekiq_pid)} -e production"
-#   end
-#
-#   task :stop do
-#     command 'echo "-----> Stop sidekiq"'
-#     command "$(ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9)"
-#     command "rm -f #{fetch(:sidekiq_pid)}"
-#   end
-#
-#   task :restart do
-#     command 'echo "-----> Restart sidekiq"'
-#     invoke :'sidekiq:stop'
-#     invoke :'sidekiq:start'
-#   end
-# end
