@@ -192,7 +192,11 @@ namespace :whenever do
   task update: :remote_environment do
     comment "Update crontab for #{fetch(:whenever_name)}"
     in_path fetch(:current_path) do
-      command "#{fetch(:bundle_bin)} exec whenever --load-file #{fetch(:whenever_file, 'config/schedule.rb')} --update-crontab #{fetch(:whenever_name)} --set 'environment=#{fetch(:rails_env)}&path=#{fetch(:current_path)}'"
+      command "#{fetch(:bundle_bin)} exec whenever\\
+                --load-file #{fetch(:whenever_file, 'config/schedule.rb')}\\
+                --update-crontab #{fetch(:whenever_name)}\\
+                --set 'environment=#{fetch(:rails_env)}\\
+                  &path=#{fetch(:current_path)}'"
     end
   end
 end
