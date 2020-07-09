@@ -6,7 +6,7 @@ class CreateTransactionJob < ApplicationJob
 
   def perform(user_id:, book_id:, quantity:, time:)
     stock = Redis.current.get("#{book_id}:bookStore").to_i
-    return if stock <= quantity
+    return if stock < quantity
 
     raise LockNotGetError unless Redis.current.set("lock", true, nx: true, ex: 5.minutes)
 

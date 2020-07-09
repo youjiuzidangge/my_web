@@ -1,17 +1,16 @@
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rbenv'    # for rbenv support. (https://rbenv.org)
+require 'mina/rbenv' # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 require 'mina/puma'
 require 'mina/whenever'
-#require "mina_sidekiq/tasks"
+require 'mina_sidekiq/tasks'
 
 # Basic settings:
 #   domain       - The hostname to SSH to.
 #   deploy_to    - Path to deploy into.
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
-
 set :application_name, 'my_web'
 set :domain, '118.25.39.227'
 set :deploy_to, '/var/www/my_web'
@@ -19,8 +18,11 @@ set :repository, 'https://github.com/youjiuzidangge/my_web.git'
 set :branch, 'master'
 set :user, 'deploy'
 
-#set :app_path, lambda { "#{fetch(:deploy_to)}/#{fetch(:current_path)}" }
-set :sidekiq_pid, lambda { "#{fetch(:current_path)}/tmp/pids/sidekiq.pid" }
+# set :app_path, lambda { "#{fetch(:deploy_to)}/#{fetch(:current_path)}" }
+# set :sidekiq_pid, lambda { "#{fetch(:current_path)}/tmp/pids/sidekiq.pid" }
+set :sidekiq_pid, -> { "#{fetch(:deploy_to)}/shared/tmp/pids" }
+set :sidekiq_log, -> { "#{fetch(:deploy_to)}/shared/log/sidekiq.log" }
+set :sidekiq_config, -> { "#{fetch(:deploy_to)}/shared/config/sidekiq.yml" }
 
 # Optional settings:
 #   set :user, 'foobar'          # Username in the server to SSH to.
@@ -37,25 +39,11 @@ set :sidekiq_pid, lambda { "#{fetch(:current_path)}/tmp/pids/sidekiq.pid" }
 # set :shared_dirs, fetch(:shared_dirs, []).push('public/assets')
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
 
-set :shared_dirs, [ 'config/wx_cert',
-                    'config/ali_cert',
-                    'log',
-                    'logs',
-                    'tmp',
-                    'vendor/bundle',
-                    'node_modules',
-                    'public/assets',
-                    'public/packs',
-                    'public/uploads',
-                    'public/front'
-                    ]
-
-
-set :shared_files, ['config/database.yml',
-                    'config/puma.rb',
-                    'config/secrets.yml',
-                    '.env'
-                    ]
+set :shared_dirs, %w[config/wx_cert config/ali_cert log logs tmp vendor/bundle
+                     node_modules public/assets public/packs public/uploads
+                     public/front]
+set :shared_files, %w[config/database.yml config/puma.rb config/secrets.yml
+                      config/sidekiq.yml .env]
 
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -72,95 +60,95 @@ end
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
   # command %{rbenv install 2.3.0 --skip-existing}
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/log"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/log"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/log")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/log")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/logs"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/logs"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/logs")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/logs")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/config")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config/wx_cert"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/wx_cert"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/config/wx_cert")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/wx_cert")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config/ali_cert"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/ali_cert"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/config/ali_cert")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config/ali_cert")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/config"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/config"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/tmp")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/vendor/bundle")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/vendor/bundle")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/vendor/bundle"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/vendor/bundle"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/node_modules")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/node_modules")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/node_modules"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/node_modules"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public/assets")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/assets")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/assets"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/assets"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public/packs")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/packs")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/packs"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/packs"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public/uploads")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/uploads")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/uploads"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/uploads"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public/front")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/front"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/public/front_new")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front_new")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/public/front_new"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/public/front_new"]
+  command %(touch "#{fetch(:deploy_to)}/shared/config/database.yml")
+  command %(echo "-----> Be sure to edit 'shared/config/database.yml'.")
 
-  command %[touch "#{fetch(:deploy_to)}/shared/config/database.yml"]
-  command  %[echo "-----> Be sure to edit 'shared/config/database.yml'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/config/sidekiq.yml")
+  command %(echo "-----> Be sure to edit 'shared/config/sidekiq.yml'.")
 
-  # command %[touch "#{fetch(:deploy_to)}/shared/config/mongoid.yml"]
-  # command  %[echo "-----> Be sure to edit 'shared/config/mongoid.yml'."]
+  # command %(touch "#{fetch(:deploy_to)}/shared/config/mongoid.yml")
+  # command  %(echo "-----> Be sure to edit 'shared/config/mongoid.yml'.")
 
-  command %[touch "#{fetch(:deploy_to)}/shared/config/puma.rb"]
-  command  %[echo "-----> Be sure to edit 'shared/config/puma.rb'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/config/puma.rb")
+  command %(echo "-----> Be sure to edit 'shared/config/puma.rb'.")
 
-  command %[touch "#{fetch(:deploy_to)}/shared/config/wx_cert/apiclient_cert.p12"]
-  command  %[echo "-----> Be sure to edit 'shared/config/wx_cert/apiclient_cert.p12'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/config/wx_cert/apiclient_cert.p12")
+  command %(echo "-----> Be sure to edit 'shared/config/wx_cert/apiclient_cert.p12'.")
 
-  command %[touch "#{fetch(:deploy_to)}/shared/config/ali_cert/rsa_private_key.pem"]
-  command  %[echo "-----> Be sure to edit 'shared/config/ali_cert/rsa_private_key.pem'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/config/ali_cert/rsa_private_key.pem")
+  command %(echo "-----> Be sure to edit 'shared/config/ali_cert/rsa_private_key.pem'.")
 
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp/sockets"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/sockets"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/tmp/sockets")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/sockets")
 
   # tmp/sockets/puma.state
-  command %[touch "#{fetch(:deploy_to)}/shared/tmp/sockets/puma.state"]
-  command  %[echo "-----> Be sure to edit 'shared/tmp/sockets/puma.state'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/tmp/sockets/puma.state")
+  command %(echo "-----> Be sure to edit 'shared/tmp/sockets/puma.state'.")
 
   # log/puma.stdout.log
-  command %[touch "#{fetch(:deploy_to)}/shared/log/puma.stdout.log"]
-  command  %[echo "-----> Be sure to edit 'shared/log/puma.stdout.log'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/log/puma.stdout.log")
+  command %(echo "-----> Be sure to edit 'shared/log/puma.stdout.log'.")
 
   # log/puma.stdout.log
-  command %[touch "#{fetch(:deploy_to)}/shared/log/puma.stderr.log"]
-  command  %[echo "-----> Be sure to edit 'shared/log/puma.stderr.log'."]
+  command %(touch "#{fetch(:deploy_to)}/shared/log/puma.stderr.log")
+  command %(echo "-----> Be sure to edit 'shared/log/puma.stderr.log'.")
 
-  command %[mkdir -p "#{fetch(:deploy_to)}/shared/tmp/pids"]
-  command %[chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/pids"]
+  command %(mkdir -p "#{fetch(:deploy_to)}/shared/tmp/pids")
+  command %(chmod g+rx,u+rwx "#{fetch(:deploy_to)}/shared/tmp/pids")
 end
 
-desc "Deploys the current version to the server."
+desc 'Deploys the current version to the server.'
 task :deploy do
   # uncomment this line to make sure you pushed your local branch to the remote origin
   # invoke :'git:ensure_pushed'
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
-    #invoke :'sidekiq:quiet'
     invoke :'git:clone'
+    invoke :'sidekiq:quiet'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
@@ -169,8 +157,8 @@ task :deploy do
 
     on :launch do
       in_path(fetch(:current_path)) do
-        command %{mkdir -p tmp/}
-        command %{touch tmp/restart.txt}
+        command %(mkdir -p tmp/)
+        command %(touch tmp/restart.txt)
       end
       invoke :'puma:stop'
       invoke :'puma:custom_start'
@@ -185,7 +173,7 @@ end
 
 namespace :puma do
   task :custom_start do
-    command %[
+    command %(
       if [ -e '#{fetch(:pumactl_socket)}' ]; then
         echo 'Puma is already running!';
       else
@@ -199,7 +187,7 @@ namespace :puma do
           exit 1
         fi
       fi
-    ]
+    )
   end
 end
 
@@ -216,21 +204,21 @@ end
 #
 #  - https://github.com/mina-deploy/mina/tree/master/docs
 
-namespace :sidekiq do
-  task :start do
-    command 'echo "-----> Start sidekiq"'
-    command "cd #{fetch(:current_path)} && RAILS_ENV=production bundle exec sidekiq -d -L log/sidekiq.log -C config/sidekiq.yml -P #{fetch(:sidekiq_pid)} -e production"
-  end
-
-  task :stop do
-    command 'echo "-----> Stop sidekiq"'
-    command "$(ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9)"
-    command "rm -f #{fetch(:sidekiq_pid)}"
-  end
-
-  task :restart do
-    command 'echo "-----> Restart sidekiq"'
-    invoke :'sidekiq:stop'
-    invoke :'sidekiq:start'
-  end
-end
+# namespace :sidekiq do
+#   task :start do
+#     command 'echo "-----> Start sidekiq"'
+#     command "cd #{fetch(:current_path)} && RAILS_ENV=production bundle exec sidekiq -d -L log/sidekiq.log -C config/sidekiq.yml -P #{fetch(:sidekiq_pid)} -e production"
+#   end
+#
+#   task :stop do
+#     command 'echo "-----> Stop sidekiq"'
+#     command "$(ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9)"
+#     command "rm -f #{fetch(:sidekiq_pid)}"
+#   end
+#
+#   task :restart do
+#     command 'echo "-----> Restart sidekiq"'
+#     invoke :'sidekiq:stop'
+#     invoke :'sidekiq:start'
+#   end
+# end
