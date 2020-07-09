@@ -17,14 +17,14 @@ set :output, error: '/var/www/my_web/shared/log/cron_error.log',
 
 env :PATH, ENV['PATH']
 
-every 3.minutes do
-  rake "books:cancel_invalid_transaction"
-end
-
-every 5.minutes do
-  rake "books:refund_to_users"
-end
-
-every 10.minutes do
-  rake "books:calculate_incomes"
-end
+# every 3.minutes do
+#   rake "books:cancel_invalid_transaction"
+# end
+#
+# every 5.minutes do
+#   rake "books:refund_to_users"
+# end
+#
+# every 10.minutes do
+#   rake "books:calculate_incomes"
+# end
