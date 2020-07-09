@@ -11,6 +11,7 @@ require 'mina_sidekiq/tasks'
 #   deploy_to    - Path to deploy into.
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
+set :rails_env, 'production'
 set :application_name, 'my_web'
 set :domain, '118.25.39.227'
 set :deploy_to, '/var/www/my_web'
