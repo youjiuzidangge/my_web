@@ -118,8 +118,6 @@ GEM
       puma (>= 2.13)
     mina-sidekiq (1.0.3)
       mina (>= 1.0.2)
-    mina-whenever (1.0.1)
-      mina (~> 1.0)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
@@ -241,7 +239,6 @@ DEPENDENCIES
   mina
   mina-puma
   mina-sidekiq
-  mina-whenever
   mysql2
   puma (~> 3.11)
   rails (~> 5.2.0)
