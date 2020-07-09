@@ -15,7 +15,8 @@ set :user, 'deploy'
 
 # set :app_path, lambda { "#{fetch(:deploy_to)}/#{fetch(:current_path)}" }
 # set :sidekiq_pid, lambda { "#{fetch(:current_path)}/tmp/pids/sidekiq.pid" }
-set :sidekiq_pid, -> { "#{fetch(:deploy_to)}/shared/tmp/pids" }
+
+set :sidekiq_pid, -> { "#{fetch(:shared_path)}/tmp/pids/sidekiq.pid" }
 set :sidekiq_log, -> { "#{fetch(:deploy_to)}/shared/log/sidekiq.log" }
 set :sidekiq_config, -> { "#{fetch(:deploy_to)}/shared/config/sidekiq.yml" }
 
