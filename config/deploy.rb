@@ -3,14 +3,8 @@ require 'mina/git'
 require 'mina/rbenv' # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 require 'mina/puma'
-#require 'mina/whenever'
 require 'mina_sidekiq/tasks'
 
-# Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
 set :rails_env, 'production'
 set :application_name, 'my_web'
 set :domain, '118.25.39.227'
@@ -192,12 +186,13 @@ namespace :puma do
   end
 end
 
+set :whenever_name, -> { "#{fetch(:domain)}_#{fetch(:rails_env)}" }
 namespace :whenever do
   desc 'Update crontab'
-  task :update do
-    command 'echo "-----> Update crontab"'
-    command "echo '-----> #{fetch(:deploy_to)}'"
-    command 'crontab -r'
-    command "cd #{fetch(:deploy_to)}/current && bundle exec whenever --update-crontab"
+  task update: :remote_environment do
+    comment "Update crontab for #{fetch(:whenever_name)}"
+    in_path fetch(:current_path) do
+      command "#{fetch(:bundle_bin)} exec whenever --load-file #{fetch(:whenever_file, 'config/schedule.rb')} --update-crontab #{fetch(:whenever_name)} --set 'environment=#{fetch(:rails_env)}&path=#{fetch(:current_path)}'"
+    end
   end
 end
