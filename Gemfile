@@ -1,6 +1,6 @@
 source 'https://gems.ruby-china.com'
 
-ruby '2.5.1'
+ruby '3.0.1'
 
 # gem custome added
 gem 'dotenv-rails'
@@ -10,16 +10,15 @@ gem 'mina-puma'
 gem 'mina-sidekiq', require: false
 gem 'whenever', require: false
 
-gem 'sidekiq'
+gem 'sidekiq', "= 6.5.1"
 gem 'sidekiq-status'
 gem 'simple_form'
-gem 'will_paginate', '~> 3.1.0'
+gem 'will_paginate'
 
-gem 'therubyracer', platforms: :ruby
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 # gem 'mysql2'
 gem 'pg', '~> 1.0'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 7.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
