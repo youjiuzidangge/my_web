@@ -5,7 +5,7 @@ require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("common.proto", :syntax => :proto3) do
-    add_message "k1.common_pb.Pager" do
+    add_message "v1.common_pb.Pager" do
       optional :page, :int64, 1
       optional :page_size, :int64, 2
       optional :total_rows, :int64, 3
@@ -13,8 +13,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
 end
 
-module K1
+module V1
   module CommonPb
-    Pager = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("k1.common_pb.Pager").msgclass
+    Pager = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("v1.common_pb.Pager").msgclass
   end
 end

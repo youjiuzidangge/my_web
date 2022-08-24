@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package k1.common_pb;
+package v1.common_pb;
 
 message Pager {
   int64 page = 1;

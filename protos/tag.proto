@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package k1.tag_pb;
+package v1.tag_pb;
 import "common.proto";
 
 service TagService {
