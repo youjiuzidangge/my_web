@@ -9,6 +9,9 @@ gem 'mina'
 gem 'mina-puma'
 gem 'mina-sidekiq', require: false
 gem 'whenever', require: false
+gem 'grpc'
+# grpc 框架层面的支持
+# gem 'gruf'
 
 gem 'sidekiq', "= 6.5.1"
 gem 'sidekiq-status'
@@ -41,7 +44,9 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  # gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'byebug'
+  # gem 'rspec-rails', '~> 6.0.0'
 end
 
 group :development do
