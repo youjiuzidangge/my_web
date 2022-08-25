@@ -1,11 +1,11 @@
-module Grpc::Server
+module Grpc::V1::Server
 
   # main starts an RpcServer that receives requests to GreeterServer at the sample
   # server port.
   def start
     s = GRPC::RpcServer.new
     s.add_http2_port('0.0.0.0:50051', :this_port_is_insecure)
-    s.handle(Grpc::Main)
+    s.handle(Grpc::V1::Main)
     # Runs the server with SIGHUP, SIGINT and SIGQUIT signal handlers to
     #   gracefully shutdown.
     # User could also choose to run server via call to run_till_terminated

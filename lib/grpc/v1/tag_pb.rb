@@ -2,7 +2,9 @@
 # source: tag.proto
 
 require 'google/protobuf'
-
+# 生成的为 require 'common_pb'
+# require 本质必须加载绝对路径，或者把路径拼接到全局变量 $LOAD_PATH 中, rails 中自动把 lib 加入到了 $LOAD_PATH 中，所以
+# 上面这个路径无法识别，必须手动修改为 rails 可识别的路径
 require 'grpc/v1/common_pb'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do

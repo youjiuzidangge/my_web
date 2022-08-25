@@ -1,6 +1,6 @@
 require 'grpc/v1/tag_services_pb'
 
-module Grpc::Client
+module Grpc::V1::Client
   def start
     hostname = 'localhost:50051'
     stub = V1::TagPb::TagService::Stub.new(hostname, :this_channel_is_insecure)
